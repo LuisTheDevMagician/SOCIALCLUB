@@ -56,15 +56,18 @@ int num_socio = 0;
 
 Candidato registrarCandidato();
 void listarCandidatos();
-void consultarCandidato(Candidato candidatos[], int num_candidatos, char nome_procurado[]);
+void consultarCandidato(char nome_procurado[]);
 Socio registrarSocio();
 void listarSocios();
-void consultarSocio(Socio socios[], int num_socios, char nome_procurado[]);
+void consultarSocio(char nome_procurado[]);
 Categoria registrarCategoria();
 Dependente registrarDependente();
 void registrarMensalidade();
 void listarMensalidades();
-void consultarMensalidade(Socio socios[], int num_socios, char nome_procurado[]);
+void consultarMensalidade(char nome_procurado[]);
+void calcularJuros(char nome_procurado[]);
+void quitarMensalidade(char nome_procurado[]);
+
 
 int main() {
     int opcao;
@@ -81,7 +84,8 @@ int main() {
         printf("7 - Registrar Mensalidade.\n");
         printf("8 - Listar Mensalidades.\n");
         printf("9 - Consultar Mensalidade.\n");
-        printf("10 - Sair do sistema.\n");
+        printf("10 - Quitar Mensalidade.\n");
+        printf("11 - Sair do Sistema.\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
         getchar(); // Limpar o buffer do teclado
@@ -97,7 +101,7 @@ int main() {
             case 3:
                 printf("Digite o nome do candidato a ser consultado: ");
                 fgets(nome_procurado, 100, stdin);
-                consultarCandidato(candidatos, num_candidato, nome_procurado);
+                consultarCandidato(nome_procurado);
                 break;
             case 4:
                 socios[num_socio] = registrarSocio();
@@ -109,7 +113,7 @@ int main() {
             case 6:
                 printf("Digite o nome do socio a ser consultado: ");
                 fgets(nome_procurado, 100, stdin);
-                consultarSocio(socios, num_socio, nome_procurado);
+                consultarSocio(nome_procurado);
                 break;
             case 7:
                 registrarMensalidade();
@@ -120,9 +124,14 @@ int main() {
             case 9:
                 printf("Digite o nome do socio que deseja consultar a mensalidade: ");
                 fgets(nome_procurado, 100, stdin);
-                consultarMensalidade(socios, num_socio, nome_procurado);
+                consultarMensalidade(nome_procurado);
                 break;
             case 10:
+                printf("Digite o nome do socio que deseja Quitar a mensalidade: ");
+                fgets(nome_procurado, 100, stdin);
+                quitarMensalidade(nome_procurado);
+                break;
+            case 11:
                 printf("======= VOCE SAIU DO SISTEMA =======\n");
                 return 0;
             default:
@@ -174,10 +183,10 @@ void listarCandidatos() {
     }
 }
 
-void consultarCandidato(Candidato candidatos[], int num_candidatos, char nome_procurado[]) {
+void consultarCandidato(char nome_procurado[]) {
     int encontrado = 0;
 
-    for (int i = 0; i < num_candidatos; i++) {
+    for (int i = 0; i < num_candidato; i++) {
         if (strcmp(candidatos[i].nomeCandidato, nome_procurado) == 0) {
             printf("___________________________________________________\n");
             printf("======= CANDIDATO ENCONTRADO =======\n");
@@ -248,15 +257,26 @@ Socio registrarSocio() {
     }
 
     if (!encontrado) {
-        printf("======= CANDIDATO NAO ENCONTRADO =======\n");
+        printf("======= CANDIDATO COM O NOME '%s' NAO ENCONTRADO =======\n", nome_procurado);
+        return novoSocio;
     }
+
+    printf("___________________________________________________\n");
+    printf("======= SOCIO REGISTRADO COM SUCESSO =======\n");
+    printf("Nome do socio: %s", novoSocio.candidato.nomeCandidato);
+    printf("Endereco do socio: %s", novoSocio.candidato.enderecoCandidato);
+    printf("Bairro do socio: %s", novoSocio.candidato.bairroCandidato);
+    printf("Email do socio: %s", novoSocio.candidato.emailCandidato);
+    printf("CEP do socio: %.0lf\n", novoSocio.candidato.cepCandidato);
+    printf("Telefone do socio: %.0lf\n", novoSocio.candidato.telefoneCandidato);
+    printf("___________________________________________________\n\n");
 
     return novoSocio;
 }
 
 void listarSocios() {
     if (num_socio == 0) {
-        printf("======= NENHUM SOCIO CADASTRADO ======\n");
+        printf("======= NENHUM SOCIO CADASTRADO =======\n");
     } else {
         for (int i = 0; i < num_socio; i++) {
             printf("___________________________________________________\n");
@@ -267,30 +287,15 @@ void listarSocios() {
             printf("CEP do socio: %.0lf\n", socios[i].candidato.cepCandidato);
             printf("Telefone do socio: %.0lf\n", socios[i].candidato.telefoneCandidato);
             printf("Categoria do socio: %s", socios[i].categoria.categoria);
-            printf("Cartao do socio: %.0lf\n", socios[i].cartaoSocio);
-
-            // Listar dependentes, se houver
-            if (socios[i].num_dependentes > 0) {
-                printf("Dependentes:\n");
-                for (int j = 0; j < socios[i].num_dependentes; j++) {
-                    printf("  Nome: %s", socios[i].dependentes[j].nomeDependente);
-                    printf("  Parentesco: %s", socios[i].dependentes[j].parentescoDependente);
-                    printf("  Email: %s", socios[i].dependentes[j].emailDependente);
-                    printf("  Cartao: %.0lf\n", socios[i].dependentes[j].cartaoDependente);
-                }
-            } else {
-                printf("Nao possui dependentes.\n");
-            }
-
             printf("___________________________________________________\n\n");
         }
     }
 }
 
-void consultarSocio(Socio socios[], int num_socios, char nome_procurado[]) {
+void consultarSocio(char nome_procurado[]) {
     int encontrado = 0;
 
-    for (int i = 0; i < num_socios; i++) {
+    for (int i = 0; i < num_socio; i++) {
         if (strcmp(socios[i].candidato.nomeCandidato, nome_procurado) == 0) {
             printf("___________________________________________________\n");
             printf("======= SOCIO ENCONTRADO =======\n");
@@ -301,161 +306,136 @@ void consultarSocio(Socio socios[], int num_socios, char nome_procurado[]) {
             printf("CEP do socio: %.0lf\n", socios[i].candidato.cepCandidato);
             printf("Telefone do socio: %.0lf\n", socios[i].candidato.telefoneCandidato);
             printf("Categoria do socio: %s", socios[i].categoria.categoria);
-            printf("Cartao do socio: %.0lf\n", socios[i].cartaoSocio);
+            printf("___________________________________________________\n\n");
 
             // Listar dependentes, se houver
             if (socios[i].num_dependentes > 0) {
                 printf("Dependentes:\n");
                 for (int j = 0; j < socios[i].num_dependentes; j++) {
-                    printf("  Nome: %s", socios[i].dependentes[j].nomeDependente);
-                    printf("  Parentesco: %s", socios[i].dependentes[j].parentescoDependente);
-                    printf("  Email: %s", socios[i].dependentes[j].emailDependente);
-                    printf("  Cartao: %.0lf\n", socios[i].dependentes[j].cartaoDependente);
+                    printf("Nome: %s", socios[i].dependentes[j].nomeDependente);
+                    printf("Parentesco: %s", socios[i].dependentes[j].parentescoDependente);
+                    printf("Email: %s", socios[i].dependentes[j].emailDependente);
+                    printf("Cartao: %.0lf\n", socios[i].dependentes[j].cartaoDependente);
+                    printf("\n");
                 }
             } else {
-                printf("Nao possui dependentes.\n");
+                printf("Nenhum dependente cadastrado.\n");
             }
 
-            printf("___________________________________________________\n\n");
             encontrado = 1;
             break;
         }
     }
 
     if (!encontrado) {
-        printf("======= SOCIO COM O NOME '%s' NAO ENCONTRADO =======.\n", nome_procurado);
+        printf("======= SOCIO COM O NOME '%s' NAO ENCONTRADO =======\n", nome_procurado);
     }
 }
 
 Categoria registrarCategoria() {
     Categoria novaCategoria;
-    printf("Digite a categoria do socio: ");
+
+    printf("Digite o nome da categoria a ser atribuida ao socio: ");
     fgets(novaCategoria.categoria, 20, stdin);
+
     return novaCategoria;
 }
 
 Dependente registrarDependente() {
-    Dependente nomeD;
+    Dependente novoDependente;
 
     printf("Digite o nome completo do dependente: ");
-    fgets(nomeD.nomeDependente, 100, stdin);
+    fgets(novoDependente.nomeDependente, 100, stdin);
 
     printf("Digite o parentesco do dependente: ");
-    fgets(nomeD.parentescoDependente, 100, stdin);
+    fgets(novoDependente.parentescoDependente, 100, stdin);
 
-    printf("Digite o email completo do dependente: ");
-    fgets(nomeD.emailDependente, 100, stdin);
+    printf("Digite o email do dependente: ");
+    fgets(novoDependente.emailDependente, 100, stdin);
 
-    printf("Digite o numero do cartao do dependente: ");
-    scanf("%lf", &nomeD.cartaoDependente);
+    printf("Digite o numero do cartao de dependente: ");
+    scanf("%lf", &novoDependente.cartaoDependente);
     getchar();
 
-    return nomeD;
+    return novoDependente;
 }
 
 void registrarMensalidade() {
     char nome_procurado[100];
     int encontrado = 0;
 
-    printf("Digite o nome do socio para registrar a mensalidade: ");
+    printf("Digite o nome do socio para registrar uma mensalidade: ");
     fgets(nome_procurado, 100, stdin);
-
 
     for (int i = 0; i < num_socio; i++) {
         if (strcmp(socios[i].candidato.nomeCandidato, nome_procurado) == 0) {
             if (socios[i].numMensalidades < MAX_MENSALIDADES) {
                 Mensalidade novaMensalidade;
 
-                printf("Digite a data de vencimento (dd mm aaaa): ");
-                scanf("%lf %lf %lf", &novaMensalidade.dia1, &novaMensalidade.mes1, &novaMensalidade.ano1);
+                printf("Digite a data de vencimento da mensalidade (dia/mes/ano): ");
+                scanf("%lf/%lf/%lf", &novaMensalidade.dia1, &novaMensalidade.mes1, &novaMensalidade.ano1);
+                getchar();
 
                 printf("Digite o valor da mensalidade: ");
                 scanf("%lf", &novaMensalidade.valorMensalidade);
+                getchar();
 
-                printf("Digite a data de pagamento (dd mm aaaa): ");
-                scanf("%lf %lf %lf", &novaMensalidade.dia2, &novaMensalidade.mes2, &novaMensalidade.ano2);
-
-                printf("Digite os juros aplicados: ");
-                scanf("%lf", &novaMensalidade.jurosMensalidade);
-
-                printf("Digite o valor pago: ");
-                scanf("%lf", &novaMensalidade.valorPagoMensalidade);
-
-                // Cálculo de atraso e saldo
-            novaMensalidade.calculoD = (novaMensalidade.dia2 + (novaMensalidade.mes2 * 30) + (novaMensalidade.ano2 * 365)) - (novaMensalidade.dia1 + (novaMensalidade.mes1 * 30) + (novaMensalidade.ano1 * 365));
-            novaMensalidade.calculoV = novaMensalidade.valorPagoMensalidade - novaMensalidade.valorMensalidade;
-
-            if(novaMensalidade.calculoD == 0 && novaMensalidade.calculoV == 0){
-                strcpy(novaMensalidade.mensalidadeQuitada, "Sim");
-            }else{
                 strcpy(novaMensalidade.mensalidadeQuitada, "Nao");
-            }
 
+                // Adiciona a nova mensalidade ao array de mensalidades do socio
                 socios[i].mensalidade[socios[i].numMensalidades] = novaMensalidade;
                 socios[i].numMensalidades++;
 
                 printf("======= MENSALIDADE REGISTRADA COM SUCESSO =======\n");
             } else {
-                printf("======= LIMITE DE MENSALIDADES ATINGIDO =======\n");
+                printf("======= LIMITE DE MENSALIDADES ALCANCADO =======\n");
             }
+
             encontrado = 1;
             break;
         }
     }
 
     if (!encontrado) {
-        printf("======= SOCIO NAO ENCONTRADO =======\n");
+        printf("======= SOCIO COM O NOME '%s' NAO ENCONTRADO =======\n", nome_procurado);
     }
 }
 
 void listarMensalidades() {
     if (num_socio == 0) {
-        printf("======= NENHUM SOCIO CADASTRADO ======\n");
-        return;
-    }
-
-    for (int i = 0; i < num_socio; i++) {
-        if (socios[i].numMensalidades > 0) {
-            printf("Mensalidades do socio: %s", socios[i].candidato.nomeCandidato);
-            for (int j = 0; j < socios[i].numMensalidades; j++) {
-                Mensalidade m = socios[i].mensalidade[j];
-                printf("Mensalidade %d:\n", j + 1);
-                printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", m.dia1, m.mes1, m.ano1);
-                printf("Valor: %.2lf\n", m.valorMensalidade);
-                printf("Data de pagamento: %.0lf/%.0lf/%.0lf\n", m.dia2, m.mes2, m.ano2);
-                printf("Juros: %.2lf\n", m.jurosMensalidade);
-                printf("Valor pago: %.2lf\n", m.valorPagoMensalidade);
-                printf("Mensalidade quitada: %s\n", m.mensalidadeQuitada);
-                printf("Atraso em dias: %.0f\n", m.calculoD);
-                printf("Diferenca de valor: %.2lf\n", m.calculoV);
-                printf("-------------------------------------------------\n");
-            }
-        } else {
-            printf("O socio %s nao possui mensalidades registradas.\n", socios[i].candidato.nomeCandidato);
-        }
-        printf("=================================================\n");
-    }
-}
-
-void consultarMensalidade(Socio socios[], int num_socios, char nome_procurado[]) {
-    int encontrado = 0;
-
-    for (int i = 0; i < num_socios; i++) {
-        if (strcmp(socios[i].candidato.nomeCandidato, nome_procurado) == 0) {
+        printf("======= NENHUM SOCIO CADASTRADO =======\n");
+    } else {
+        for (int i = 0; i < num_socio; i++) {
             if (socios[i].numMensalidades > 0) {
                 printf("Mensalidades do socio: %s", socios[i].candidato.nomeCandidato);
                 for (int j = 0; j < socios[i].numMensalidades; j++) {
-                    Mensalidade m = socios[i].mensalidade[j];
                     printf("Mensalidade %d:\n", j + 1);
-                    printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", m.dia1, m.mes1, m.ano1);
-                    printf("Valor: %.2lf\n", m.valorMensalidade);
-                    printf("Data de pagamento: %.0lf/%.0lf/%.0lf\n", m.dia2, m.mes2, m.ano2);
-                    printf("Juros: %.2lf\n", m.jurosMensalidade);
-                    printf("Valor pago: %.2lf\n", m.valorPagoMensalidade);
-                    printf("Mensalidade quitada: %s\n", m.mensalidadeQuitada);
-                    printf("Atraso em dias: %.0lf\n", m.calculoD);
-                    printf("Diferenca de valor: %.2lf\n", m.calculoV);
-                    printf("-------------------------------------------------\n");
+                    printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia1, socios[i].mensalidade[j].mes1, socios[i].mensalidade[j].ano1);
+                    printf("Valor: %.2lf\n", socios[i].mensalidade[j].valorMensalidade);
+                    printf("Mensalidade quitada: %s\n", socios[i].mensalidade[j].mensalidadeQuitada);
+                }
+                printf("\n");
+            } else {
+                printf("O socio %s nao possui mensalidades registradas.\n", socios[i].candidato.nomeCandidato);
+            }
+        }
+    }
+}
+
+void consultarMensalidade(char nome_procurado[]) {
+    int encontrado = 0;
+
+    for (int i = 0; i < num_socio; i++) {
+        if (strcmp(socios[i].candidato.nomeCandidato, nome_procurado) == 0) {
+            if (socios[i].numMensalidades > 0) {
+                printf("Mensalidades do socio: %s\n", socios[i].candidato.nomeCandidato);
+                for (int j = 0; j < socios[i].numMensalidades; j++) {
+                    printf("Mensalidade %d:\n", j + 1);
+                    printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia1, socios[i].mensalidade[j].mes1, socios[i].mensalidade[j].ano1);
+                    printf("Valor: %.2lf\n", socios[i].mensalidade[j].valorMensalidade);
+                    printf("Data de pagamento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia2, socios[i].mensalidade[j].mes2, socios[i].mensalidade[j].ano2);
+                    printf("Valor pago: %.2lf\n", socios[i].mensalidade[j].valorPagoMensalidade);
+                    printf("Mensalidade quitada: %s\n", socios[i].mensalidade[j].mensalidadeQuitada);
                 }
             } else {
                 printf("O socio %s nao possui mensalidades registradas.\n", socios[i].candidato.nomeCandidato);
@@ -466,6 +446,95 @@ void consultarMensalidade(Socio socios[], int num_socios, char nome_procurado[])
     }
 
     if (!encontrado) {
-        printf("======= SOCIO COM O NOME '%s' NAO ENCONTRADO =======.\n", nome_procurado);
+        printf("======= SOCIO COM O NOME '%s' NAO ENCONTRADO =======\n", nome_procurado);
     }
 }
+
+void calcularJuros(char nome_procurado[]) {
+    int encontrado = 0;
+
+    for (int i = 0; i < num_socio; i++) {
+        if (strcmp(socios[i].candidato.nomeCandidato, nome_procurado) == 0) {
+            if (socios[i].numMensalidades > 0) {
+                printf("Mensalidades do socio: %s\n", socios[i].candidato.nomeCandidato);
+                for (int j = 0; j < socios[i].numMensalidades; j++) {
+                    printf("Mensalidade %d:\n", j + 1);
+                    printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia1, socios[i].mensalidade[j].mes1, socios[i].mensalidade[j].ano1);
+                    printf("Valor: %.2lf\n", socios[i].mensalidade[j].valorMensalidade);
+                    printf("Mensalidade quitada: %s\n", socios[i].mensalidade[j].mensalidadeQuitada);
+                    printf("-------------------------------------------------\n");
+                }
+            }
+            encontrado = 1;
+        }
+    }
+
+    if (!encontrado) {
+        printf("======= SOCIO COM O NOME '%s' NAO ENCONTRADO =======.\n", nome_procurado);
+        return;
+    }
+
+    int opcao = 0;
+    printf("Qual mensalidade voce deseja calcular os juros: ");
+    scanf("%d", &opcao);
+    getchar(); // Limpar o buffer do teclado
+
+    for (int i = 0; i < num_socio; i++) {
+        for (int j = opcao - 1; j < socios[i].numMensalidades; j++) {
+            printf("Mensalidade %d:\n", j + 1);
+            printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia1, socios[i].mensalidade[j].mes1, socios[i].mensalidade[j].ano1);
+            printf("Valor: %.2lf\n", socios[i].mensalidade[j].valorMensalidade);
+
+            printf("Digite a data de pagamento (dia/mes/ano): ");
+            scanf("%lf/%lf/%lf", &socios[i].mensalidade[j].dia2, &socios[i].mensalidade[j].mes2, &socios[i].mensalidade[j].ano2);
+            getchar(); // Limpar o buffer do teclado
+
+            socios[i].mensalidade[j].jurosMensalidade = 1.25;
+            socios[i].mensalidade[j].valorPagoMensalidade = (((socios[i].mensalidade[j].dia2 + (socios[i].mensalidade[j].mes2 * 30) + (socios[i].mensalidade[j].ano2 * 365)) - (socios[i].mensalidade[j].dia1 + (socios[i].mensalidade[j].mes1 * 30) + (socios[i].mensalidade[j].ano1 * 365))) / 30.0) * socios[i].mensalidade[j].jurosMensalidade * socios[i].mensalidade[j].valorMensalidade;
+
+            printf("Com uma taxa de juros de 25%% ao mes o valor a ser pago e: %.2lf\n", socios[i].mensalidade[j].valorPagoMensalidade);
+            printf("Data de pagamento registrada: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia2, socios[i].mensalidade[j].mes2, socios[i].mensalidade[j].ano2);
+            break;
+        }
+        break;
+    }
+}
+
+void quitarMensalidade(char nome_procurado[]) {
+    calcularJuros(nome_procurado);
+
+    int encontrado = 0;
+
+    for (int i = 0; i < num_socio; i++) {
+        if (strcmp(socios[i].candidato.nomeCandidato, nome_procurado) == 0) {
+            if (socios[i].numMensalidades > 0) {
+                for (int j = 0; j < socios[i].numMensalidades; j++) {
+                    printf("Mensalidade %d:\n", j + 1);
+                    printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia1, socios[i].mensalidade[j].mes1, socios[i].mensalidade[j].ano1);
+                    printf("Valor: %.2lf\n", socios[i].mensalidade[j].valorMensalidade);
+                    printf("Mensalidade quitada: %s\n", socios[i].mensalidade[j].mensalidadeQuitada);
+                    printf("Deseja quitar esta mensalidade? (1 - Sim / 2 - Nao): ");
+                    int opcao;
+                    scanf("%d", &opcao);
+                    getchar(); // Limpar o buffer do teclado
+
+                    if (opcao == 1) {
+                        strcpy(socios[i].mensalidade[j].mensalidadeQuitada, "Sim");
+
+                        printf("Data de pagamento registrada: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia2, socios[i].mensalidade[j].mes2, socios[i].mensalidade[j].ano2);
+                        printf("======= MENSALIDADE QUITADA COM SUCESSO =======\n");
+                    }
+                }
+            } else {
+                printf("O socio %s nao possui mensalidades registradas.\n", socios[i].candidato.nomeCandidato);
+            }
+            encontrado = 1;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        printf("======= SOCIO COM O NOME '%s' NAO ENCONTRADO =======\n", nome_procurado);
+    }
+}
+
