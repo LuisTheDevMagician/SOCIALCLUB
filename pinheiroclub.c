@@ -380,6 +380,8 @@ void registrarMensalidade() {
                 scanf("%lf", &novaMensalidade.valorMensalidade);
                 getchar();
 
+                novaMensalidade.valorPagoMensalidade = 0;
+
                 strcpy(novaMensalidade.mensalidadeQuitada, "Nao");
 
                 // Adiciona a nova mensalidade ao array de mensalidades do socio
@@ -433,9 +435,11 @@ void consultarMensalidade(char nome_procurado[]) {
                     printf("Mensalidade %d:\n", j + 1);
                     printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia1, socios[i].mensalidade[j].mes1, socios[i].mensalidade[j].ano1);
                     printf("Valor: %.2lf\n", socios[i].mensalidade[j].valorMensalidade);
+                    printf("Mensalidade quitada: %s\n", socios[i].mensalidade[j].mensalidadeQuitada);
+                    if (strcmp(socios[i].mensalidade[j].mensalidadeQuitada, "Sim") == 0){
                     printf("Data de pagamento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia2, socios[i].mensalidade[j].mes2, socios[i].mensalidade[j].ano2);
                     printf("Valor pago: %.2lf\n", socios[i].mensalidade[j].valorPagoMensalidade);
-                    printf("Mensalidade quitada: %s\n", socios[i].mensalidade[j].mensalidadeQuitada);
+                    }
                 }
             } else {
                 printf("O socio %s nao possui mensalidades registradas.\n", socios[i].candidato.nomeCandidato);
@@ -458,11 +462,13 @@ void calcularJuros(char nome_procurado[]) {
             if (socios[i].numMensalidades > 0) {
                 printf("Mensalidades do socio: %s\n", socios[i].candidato.nomeCandidato);
                 for (int j = 0; j < socios[i].numMensalidades; j++) {
+                    if(socios[i].mensalidade[j].valorPagoMensalidade <= 0){
                     printf("Mensalidade %d:\n", j + 1);
                     printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia1, socios[i].mensalidade[j].mes1, socios[i].mensalidade[j].ano1);
                     printf("Valor: %.2lf\n", socios[i].mensalidade[j].valorMensalidade);
                     printf("Mensalidade quitada: %s\n", socios[i].mensalidade[j].mensalidadeQuitada);
                     printf("-------------------------------------------------\n");
+                    }
                 }
             }
             encontrado = 1;
@@ -501,8 +507,6 @@ void calcularJuros(char nome_procurado[]) {
 }
 
 void quitarMensalidade(char nome_procurado[]) {
-    calcularJuros(nome_procurado);
-
     int encontrado = 0;
 
     for (int i = 0; i < num_socio; i++) {
@@ -513,6 +517,16 @@ void quitarMensalidade(char nome_procurado[]) {
                     printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia1, socios[i].mensalidade[j].mes1, socios[i].mensalidade[j].ano1);
                     printf("Valor: %.2lf\n", socios[i].mensalidade[j].valorMensalidade);
                     printf("Mensalidade quitada: %s\n", socios[i].mensalidade[j].mensalidadeQuitada);
+
+                    // Verifica se a mensalidade já foi quitada
+                    if (strcmp(socios[i].mensalidade[j].mensalidadeQuitada, "Sim") == 0) {
+                        printf("Esta mensalidade ja foi quitada. Nao e possivel calcular juros ou quitá-la novamente.\n");
+                        continue; // Pula para a próxima mensalidade (se houver)
+                    }
+
+                    // Caso não esteja quitada, calcular os juros antes de quitar
+                    calcularJuros(nome_procurado);
+
                     printf("Deseja quitar esta mensalidade? (1 - Sim / 2 - Nao): ");
                     int opcao;
                     scanf("%d", &opcao);
@@ -537,4 +551,6 @@ void quitarMensalidade(char nome_procurado[]) {
         printf("======= SOCIO COM O NOME '%s' NAO ENCONTRADO =======\n", nome_procurado);
     }
 }
+
+
 
