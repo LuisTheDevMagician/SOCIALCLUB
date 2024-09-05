@@ -69,6 +69,8 @@ void calcularJuros(char nome_procurado[]);
 void quitarMensalidade(char nome_procurado[]);
 
 
+
+
 int main() {
     int opcao;
     char nome_procurado[100];
@@ -76,16 +78,14 @@ int main() {
     while (1) {
         printf("======= SISTEMA DE GERENCIA DO PINHEIRO SPORT CLUB =======\n");
         printf("1 - Registrar candidato.\n");
-        printf("2 - Listar todos os candidatos.\n");
-        printf("3 - Consultar candidato especifico.\n");
-        printf("4 - Registrar socio.\n");
-        printf("5 - Listar todos os socios.\n");
-        printf("6 - Consultar socio especifico.\n");
-        printf("7 - Registrar Mensalidade.\n");
-        printf("8 - Listar Mensalidades.\n");
-        printf("9 - Consultar Mensalidade.\n");
-        printf("10 - Quitar Mensalidade.\n");
-        printf("11 - Sair do Sistema.\n");
+        printf("2 - Consultar candidato especifico.\n");
+        printf("3 - Registrar socio.\n");
+        printf("4 - Consultar socio especifico.\n");
+        printf("5 - Registrar Mensalidade.\n");
+        printf("6 - Listar Mensalidades.\n");
+        printf("7 - Consultar Mensalidade.\n");
+        printf("8 - Quitar Mensalidade.\n");
+        printf("9 - Sair do Sistema.\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
         getchar(); // Limpar o buffer do teclado
@@ -97,41 +97,41 @@ int main() {
                 break;
             case 2:
                 listarCandidatos();
-                break;
-            case 3:
                 printf("Digite o nome do candidato a ser consultado: ");
                 fgets(nome_procurado, 100, stdin);
                 consultarCandidato(nome_procurado);
                 break;
-            case 4:
+            case 3:
+                listarCandidatos();
                 socios[num_socio] = registrarSocio();
                 num_socio++;
                 break;
-            case 5:
+            case 4:
                 listarSocios();
-                break;
-            case 6:
                 printf("Digite o nome do socio a ser consultado: ");
                 fgets(nome_procurado, 100, stdin);
                 consultarSocio(nome_procurado);
                 break;
-            case 7:
+            case 5:
+                listarSocios();
                 registrarMensalidade();
                 break;
-            case 8:
+            case 6:
                 listarMensalidades();
                 break;
-            case 9:
+            case 7:
+                listarSocios();
                 printf("Digite o nome do socio que deseja consultar a mensalidade: ");
                 fgets(nome_procurado, 100, stdin);
                 consultarMensalidade(nome_procurado);
                 break;
-            case 10:
+            case 8:
+                listarSocios();
                 printf("Digite o nome do socio que deseja Quitar a mensalidade: ");
                 fgets(nome_procurado, 100, stdin);
                 quitarMensalidade(nome_procurado);
                 break;
-            case 11:
+            case 9:
                 printf("======= VOCE SAIU DO SISTEMA =======\n");
                 return 0;
             default:
@@ -155,11 +155,11 @@ Candidato registrarCandidato() {
     printf("Digite o email completo do candidato: ");
     fgets(nomeC.emailCandidato, 100, stdin);
 
-    printf("Digite o CEP do candidato: ");
+    printf("Digite o CEP do candidato (Apenas Numeros): ");
     scanf("%lf", &nomeC.cepCandidato);
     getchar();
 
-    printf("Digite o telefone do candidato: ");
+    printf("Digite o telefone do candidato (Apenas Numeros): ");
     scanf("%lf", &nomeC.telefoneCandidato);
     getchar();
 
@@ -173,10 +173,6 @@ void listarCandidatos() {
         for (int i = 0; i < num_candidato; i++) {
             printf("___________________________________________________\n");
             printf("Nome do candidato: %s", candidatos[i].nomeCandidato);
-            printf("Endereco do candidato: %s", candidatos[i].enderecoCandidato);
-            printf("Bairro do candidato: %s", candidatos[i].bairroCandidato);
-            printf("Email do candidato: %s", candidatos[i].emailCandidato);
-            printf("CEP do candidato: %.0lf\n", candidatos[i].cepCandidato);
             printf("Telefone do candidato: %.0lf\n", candidatos[i].telefoneCandidato);
             printf("___________________________________________________\n\n");
         }
@@ -219,6 +215,13 @@ Socio registrarSocio() {
         if (strcmp(candidatos[i].nomeCandidato, nome_procurado) == 0) {
             novoSocio.candidato = candidatos[i];  // Copiar informações do candidato
 
+              // Remover o candidato da lista e reorganizar os outros candidatos
+            for (int j = i; j < num_candidato - 1; j++) {
+                candidatos[j] = candidatos[j + 1];
+            }
+            num_candidato--; // Reduzir o número de candidatos
+
+
             printf("Deseja atribuir uma categoria ao socio?\n 1 - Sim\n 2 - Nao\n");
             scanf("%d", &categoria);
             getchar();
@@ -229,7 +232,7 @@ Socio registrarSocio() {
                 strcpy(novoSocio.categoria.categoria, "Sem categoria\n"); // Se não quiser registrar
             }
 
-            printf("Digite o numero do cartao de socio: ");
+            printf("Digite o numero do cartao de socio (Apenas Numeros): ");
             scanf("%lf", &novoSocio.cartaoSocio);
             getchar();
 
@@ -237,7 +240,7 @@ Socio registrarSocio() {
             novoSocio.num_dependentes = 0;
 
             while (1) {
-                printf("Deseja atribuir um dependente ao socio?\n 1 - Sim\n 2 - Nao\n");
+                printf("Deseja atribuir dependentes ao socio?\n 1 - Sim\n 2 - Nao\n");
                 scanf("%d", &depen);
                 getchar();
 
@@ -245,6 +248,7 @@ Socio registrarSocio() {
                     novoSocio.dependentes[novoSocio.num_dependentes] = registrarDependente();
                     novoSocio.num_dependentes++;
                 } else {
+        
                     break;
                 }
             }
@@ -281,12 +285,6 @@ void listarSocios() {
         for (int i = 0; i < num_socio; i++) {
             printf("___________________________________________________\n");
             printf("Nome do socio: %s", socios[i].candidato.nomeCandidato);
-            printf("Endereco do socio: %s", socios[i].candidato.enderecoCandidato);
-            printf("Bairro do socio: %s", socios[i].candidato.bairroCandidato);
-            printf("Email do socio: %s", socios[i].candidato.emailCandidato);
-            printf("CEP do socio: %.0lf\n", socios[i].candidato.cepCandidato);
-            printf("Telefone do socio: %.0lf\n", socios[i].candidato.telefoneCandidato);
-            printf("Categoria do socio: %s", socios[i].categoria.categoria);
             printf("___________________________________________________\n\n");
         }
     }
@@ -353,7 +351,7 @@ Dependente registrarDependente() {
     printf("Digite o email do dependente: ");
     fgets(novoDependente.emailDependente, 100, stdin);
 
-    printf("Digite o numero do cartao de dependente: ");
+    printf("Digite o numero do cartao de dependente (Apenas Numeros): ");
     scanf("%lf", &novoDependente.cartaoDependente);
     getchar();
 
@@ -416,9 +414,8 @@ void listarMensalidades() {
                     printf("Valor: %.2lf\n", socios[i].mensalidade[j].valorMensalidade);
                     printf("Mensalidade quitada: %s\n", socios[i].mensalidade[j].mensalidadeQuitada);
                 }
-                printf("\n");
             } else {
-                printf("O socio %s nao possui mensalidades registradas.\n", socios[i].candidato.nomeCandidato);
+                printf("O socio %snao possui mensalidades registradas.\n", socios[i].candidato.nomeCandidato);
             }
         }
     }
@@ -537,6 +534,9 @@ void quitarMensalidade(char nome_procurado[]) {
 
                         printf("Data de pagamento registrada: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia2, socios[i].mensalidade[j].mes2, socios[i].mensalidade[j].ano2);
                         printf("======= MENSALIDADE QUITADA COM SUCESSO =======\n");
+                    }else{
+                         printf("======= MENSALIDADE NAO FOI QUITADA =======\n");
+                         break;
                     }
                 }
             } else {
