@@ -2,58 +2,64 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_MENSALIDADES 12
-#define MAX_DEPENDENTES 5
-#define MAX_CANDIDATOS 100
-#define MAX_SOCIOS 100
+#define MAX_MENSALIDADES 12 // Número máximo de mensalidades permitida
+#define MAX_DEPENDENTES 5 // Número máximo de dependentes permitidos
+#define MAX_CANDIDATOS 100  // Número máximo de candidatos permitidos
+#define MAX_SOCIOS 100 // Número máximo de sócios permitidos
 
+// Estrutura para representar uma mensalidade
 typedef struct {
-    double dia1, mes1, ano1;
-    double valorMensalidade;
-    double dia2, mes2, ano2;
-    double jurosMensalidade;
-    double valorPagoMensalidade;
-    double calculoD;
-    double calculoV;
-    char mensalidadeQuitada[4]; // Ajustado para caber "Sim" ou "Nao"
+    double dia1, mes1, ano1; // Data de vencimento da mensalidade
+    double valorMensalidade; // Valor da mensalidade
+    double dia2, mes2, ano2; // Data de pagamento da mensalidade
+    double jurosMensalidade; // Valor dos juros da mensalidade
+    double valorPagoMensalidade; // Valor pago da mensalidade
+    double calculoD; // Cálculo relacionado à data
+    double calculoV; // Cálculo relacionado ao valor
+    char mensalidadeQuitada[4]; // Status de quitação da mensalidade ("Sim" ou "Nao")
 } Mensalidade;
 
+// Estrutura para representar um dependente
 typedef struct {
-    char nomeDependente[100];
-    char parentescoDependente[100];
-    char emailDependente[100];
-    double cartaoDependente;
+    char nomeDependente[100]; // Nome do dependente
+    char parentescoDependente[100];  // Parentesco do dependente com o sócio
+    char emailDependente[100]; // Email do dependente
+    double cartaoDependente; // Número do cartão do dependente
 } Dependente;
 
+// Estrutura para representar uma categoria
 typedef struct {
-    char categoria[20];
+    char categoria[20]; // Categoria do sócio
 } Categoria;
 
+// Estrutura para representar um candidato
 typedef struct {
-    char nomeCandidato[100];
-    char enderecoCandidato[100];
-    char bairroCandidato[100];
-    char emailCandidato[100];
-    double cepCandidato;
-    double telefoneCandidato;
+    char nomeCandidato[100]; // Nome do candidato
+    char enderecoCandidato[100];  // Endereço do candidato
+    char bairroCandidato[100]; // Bairro do candidato
+    char emailCandidato[100]; // Email do canditado
+    double cepCandidato; // CEP do candidato
+    double telefoneCandidato; // Telefone do candidato
 } Candidato;
 
+// Estrutura para representar um sócio
 typedef struct {
-    Mensalidade mensalidade[MAX_MENSALIDADES];
-    Candidato candidato;
-    Categoria categoria;
-    Dependente dependentes[MAX_DEPENDENTES];
-    int num_dependentes;
-    int numMensalidades;
-    double cartaoSocio;
+    Mensalidade mensalidade[MAX_MENSALIDADES];  // Array de mensalidades do sócio
+    Candidato candidato; // Informações do candidato associado
+    Categoria categoria; // Categoria do sócio
+    Dependente dependentes[MAX_DEPENDENTES]; // Array de dependentes do sócio
+    int num_dependentes; // Número de dependentes
+    int numMensalidades;  // Número de mensalidades registradas
+    double cartaoSocio; // Número do cartão do sócio
 } Socio;
 
 // Arrays globais para armazenar candidatos e sócios
-Candidato candidatos[MAX_CANDIDATOS];
-Socio socios[MAX_SOCIOS];
-int num_candidato = 0;
-int num_socio = 0;
+Candidato candidatos[MAX_CANDIDATOS]; // Array de candidatos
+Socio socios[MAX_SOCIOS];  // Array de sócios
+int num_candidato = 0;  // Contador de candidatos
+int num_socio = 0; // Contador de sócios
 
+// Funções declaradas antes da main
 Candidato registrarCandidato();
 void listarCandidatos();
 void consultarCandidato(char nome_procurado[]);
@@ -73,8 +79,9 @@ void quitarMensalidade(char nome_procurado[]);
 
 int main() {
     int opcao;
-    char nome_procurado[100];
+    char nome_procurado[100]; // Buffer para receber o nome procurado
 
+    // Loop do menu principal do sistema
     while (1) {
         printf("======= SISTEMA DE GERENCIA DO PINHEIRO SPORT CLUB =======\n");
         printf("1 - Registrar candidato.\n");
@@ -87,24 +94,24 @@ int main() {
         printf("8 - Quitar Mensalidade.\n");
         printf("9 - Sair do Sistema.\n");
         printf("Escolha uma opcao: ");
-        scanf("%d", &opcao);
+        scanf("%d", &opcao); // Leitura da opção escolhida pelo usuário
         getchar(); // Limpar o buffer do teclado
 
         switch (opcao) {
             case 1:
-                candidatos[num_candidato] = registrarCandidato();
-                num_candidato++;
+                candidatos[num_candidato] = registrarCandidato(); // Registrar novo candidato
+                num_candidato++; // Incrementar contador de candidatos
                 break;
             case 2:
-                listarCandidatos();
+                listarCandidatos(); // Lista os candidatos
                 printf("Digite o nome do candidato a ser consultado: ");
-                fgets(nome_procurado, 100, stdin);
-                consultarCandidato(nome_procurado);
+                fgets(nome_procurado, 100, stdin); // Recebe o nome procurado
+                consultarCandidato(nome_procurado); // Consulta um candidato em específico
                 break;
             case 3:
-                listarCandidatos();
-                socios[num_socio] = registrarSocio();
-                num_socio++;
+                listarCandidatos(); // Lista os candidatos
+                socios[num_socio] = registrarSocio();// Registra um novo sócio
+                num_socio++; // Incrementa o número de sócios
                 break;
             case 4:
                 listarSocios();
@@ -114,22 +121,22 @@ int main() {
                 break;
             case 5:
                 listarSocios();
-                registrarMensalidade();
+                registrarMensalidade(); // Registra uma nova mensalidade
                 break;
             case 6:
-                listarMensalidades();
+                listarMensalidades(); // Lista as mensalidades
                 break;
             case 7:
                 listarSocios();
                 printf("Digite o nome do socio que deseja consultar a mensalidade: ");
                 fgets(nome_procurado, 100, stdin);
-                consultarMensalidade(nome_procurado);
+                consultarMensalidade(nome_procurado); // Consulta todas as informações de uma mensalidade
                 break;
             case 8:
                 listarSocios();
                 printf("Digite o nome do socio que deseja Quitar a mensalidade: ");
                 fgets(nome_procurado, 100, stdin);
-                quitarMensalidade(nome_procurado);
+                quitarMensalidade(nome_procurado); // Quita completamente a mensalidade
                 break;
             case 9:
                 printf("======= VOCE SAIU DO SISTEMA =======\n");
@@ -140,8 +147,9 @@ int main() {
     }
 }
 
+// Captura os dados de um candidato (nome, endereço, bairro, e-mail, CEP, telefone) e retorna um novo candidato.
 Candidato registrarCandidato() {
-    Candidato nomeC;
+    Candidato nomeC; // variavel local que irá armazenar todas as informações do candidato
 
     printf("Digite o nome completo do candidato: ");
     fgets(nomeC.nomeCandidato, 100, stdin);
@@ -163,9 +171,10 @@ Candidato registrarCandidato() {
     scanf("%lf", &nomeC.telefoneCandidato);
     getchar();
 
-    return nomeC;
+    return nomeC; // Retorna um novo candidato
 }
 
+// Lista todos os candidatos registrados no sistema, mostrando nome e telefone de cada um.
 void listarCandidatos() {
     if (num_candidato == 0) {
         printf("======= NENHUM CANDIDATO CADASTRADO ======\n");
@@ -179,6 +188,7 @@ void listarCandidatos() {
     }
 }
 
+//Busca e exibe as informações completas de um candidato específico pelo nome. 
 void consultarCandidato(char nome_procurado[]) {
     int encontrado = 0;
 
@@ -203,6 +213,7 @@ void consultarCandidato(char nome_procurado[]) {
     }
 }
 
+// Registra um novo sócio a partir de um candidato existente. Permite atribuir uma categoria e dependentes ao sócio e remove o candidato da lista de candidatos após o registro.
 Socio registrarSocio() {
     Socio novoSocio;
     char nome_procurado[100];
@@ -215,7 +226,7 @@ Socio registrarSocio() {
         if (strcmp(candidatos[i].nomeCandidato, nome_procurado) == 0) {
             novoSocio.candidato = candidatos[i];  // Copiar informações do candidato
 
-              // Remover o candidato da lista e reorganizar os outros candidatos
+            // Remover o candidato da lista e reorganizar os outros candidatos
             for (int j = i; j < num_candidato - 1; j++) {
                 candidatos[j] = candidatos[j + 1];
             }
@@ -278,6 +289,7 @@ Socio registrarSocio() {
     return novoSocio;
 }
 
+// Exibe a lista de sócios registrados no sistema.
 void listarSocios() {
     if (num_socio == 0) {
         printf("======= NENHUM SOCIO CADASTRADO =======\n");
@@ -290,6 +302,7 @@ void listarSocios() {
     }
 }
 
+// Exibe todas as informações detalhadas de um sócio, incluindo dados pessoais e dependentes, se houver.
 void consultarSocio(char nome_procurado[]) {
     int encontrado = 0;
 
@@ -330,6 +343,7 @@ void consultarSocio(char nome_procurado[]) {
     }
 }
 
+// Captura e retorna o nome de uma categoria para ser atribuída a um sócio.
 Categoria registrarCategoria() {
     Categoria novaCategoria;
 
@@ -339,6 +353,7 @@ Categoria registrarCategoria() {
     return novaCategoria;
 }
 
+//  Captura e retorna os dados de um dependente (nome, parentesco, e-mail, número do cartão).
 Dependente registrarDependente() {
     Dependente novoDependente;
 
@@ -358,6 +373,7 @@ Dependente registrarDependente() {
     return novoDependente;
 }
 
+// Registra uma nova mensalidade para um sócio, capturando a data de vencimento, o valor, e definindo a mensalidade como "não quitada".
 void registrarMensalidade() {
     char nome_procurado[100];
     int encontrado = 0;
@@ -401,6 +417,7 @@ void registrarMensalidade() {
     }
 }
 
+// Lista todas as mensalidades registradas de todos os sócios, incluindo a data de vencimento, valor, e o status de quitação.
 void listarMensalidades() {
     if (num_socio == 0) {
         printf("======= NENHUM SOCIO CADASTRADO =======\n");
@@ -421,6 +438,7 @@ void listarMensalidades() {
     }
 }
 
+// Exibe as mensalidades de um sócio específico, mostrando detalhes como data de vencimento, valor, e status de quitação.
 void consultarMensalidade(char nome_procurado[]) {
     int encontrado = 0;
 
@@ -451,6 +469,7 @@ void consultarMensalidade(char nome_procurado[]) {
     }
 }
 
+// Calcula os juros de uma mensalidade atrasada com base na data de vencimento e na data de pagamento fornecida.
 void calcularJuros(char nome_procurado[]) {
     int encontrado = 0;
 
@@ -459,7 +478,7 @@ void calcularJuros(char nome_procurado[]) {
             if (socios[i].numMensalidades > 0) {
                 printf("Mensalidades do socio: %s\n", socios[i].candidato.nomeCandidato);
                 for (int j = 0; j < socios[i].numMensalidades; j++) {
-                    if(socios[i].mensalidade[j].valorPagoMensalidade <= 0){
+                    if(socios[i].mensalidade[j].valorPagoMensalidade <= 0){ // Verifica se a mensalidade já foi paga ou não
                     printf("Mensalidade %d:\n", j + 1);
                     printf("Data de vencimento: %.0lf/%.0lf/%.0lf\n", socios[i].mensalidade[j].dia1, socios[i].mensalidade[j].mes1, socios[i].mensalidade[j].ano1);
                     printf("Valor: %.2lf\n", socios[i].mensalidade[j].valorMensalidade);
@@ -492,7 +511,8 @@ void calcularJuros(char nome_procurado[]) {
             scanf("%lf/%lf/%lf", &socios[i].mensalidade[j].dia2, &socios[i].mensalidade[j].mes2, &socios[i].mensalidade[j].ano2);
             getchar(); // Limpar o buffer do teclado
 
-            socios[i].mensalidade[j].jurosMensalidade = 1.25;
+            socios[i].mensalidade[j].jurosMensalidade = 1.25; //Juros fiox a 25% ao mês
+            // Calcula o valor a ser pago já com os juros
             socios[i].mensalidade[j].valorPagoMensalidade = (((socios[i].mensalidade[j].dia2 + (socios[i].mensalidade[j].mes2 * 30) + (socios[i].mensalidade[j].ano2 * 365)) - (socios[i].mensalidade[j].dia1 + (socios[i].mensalidade[j].mes1 * 30) + (socios[i].mensalidade[j].ano1 * 365))) / 30.0) * socios[i].mensalidade[j].jurosMensalidade * socios[i].mensalidade[j].valorMensalidade;
 
             printf("Com uma taxa de juros de 25%% ao mes o valor a ser pago e: %.2lf\n", socios[i].mensalidade[j].valorPagoMensalidade);
@@ -503,6 +523,7 @@ void calcularJuros(char nome_procurado[]) {
     }
 }
 
+// Permite quitar uma mensalidade específica de um sócio.
 void quitarMensalidade(char nome_procurado[]) {
     int encontrado = 0;
 
@@ -551,6 +572,5 @@ void quitarMensalidade(char nome_procurado[]) {
         printf("======= SOCIO COM O NOME '%s' NAO ENCONTRADO =======\n", nome_procurado);
     }
 }
-
 
 
