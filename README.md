@@ -4,6 +4,13 @@
 **Aluno:** Luis Eduardo Pinheiro Martins  
 **Data de entrega:** 09/09/2024
 
+## Descrição do Sistema
+
+O sistema **Club Social** foi desenvolvido para gerenciar o cadastro de candidatos, sócios e suas respectivas mensalidades em um clube esportivo. Ele permite a inscrição de candidatos, o registro de novos sócios a partir desses candidatos, a atribuição de dependentes e categorias, e o controle financeiro das mensalidades dos sócios.
+
+O sistema oferece funcionalidades para registrar, listar e consultar candidatos e sócios, além de gerenciar mensalidades com cálculo de juros em caso de atraso. O objetivo é fornecer um ambiente simples e eficiente para o controle e administração das atividades do clube, facilitando o acesso a informações detalhadas dos sócios e suas obrigações financeiras.
+
+
 ## Funções Implementadas
 
 ### `registrarCandidato()`
