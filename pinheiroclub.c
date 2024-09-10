@@ -104,40 +104,52 @@ int main() {
                 break;
             case 2:
                 listarCandidatos(); // Lista os candidatos
+                if(num_candidato>0){
                 printf("Digite o nome do candidato a ser consultado: ");
                 fgets(nome_procurado, 100, stdin); // Recebe o nome procurado
                 consultarCandidato(nome_procurado); // Consulta um candidato em específico
                 break;
+                }
             case 3:
                 listarCandidatos(); // Lista os candidatos
+                if(num_candidato>0){
                 socios[num_socio] = registrarSocio();// Registra um novo sócio
                 num_socio++; // Incrementa o número de sócios
                 break;
+                }
             case 4:
                 listarSocios();
+                if(num_socio>0){
                 printf("Digite o nome do socio a ser consultado: ");
                 fgets(nome_procurado, 100, stdin);
                 consultarSocio(nome_procurado);
                 break;
+                }
             case 5:
                 listarSocios();
+                if(num_socio>0){
                 registrarMensalidade(); // Registra uma nova mensalidade
                 break;
+                }
             case 6:
                 listarMensalidades(); // Lista as mensalidades
                 break;
             case 7:
                 listarSocios();
+                if(num_socio>0){
                 printf("Digite o nome do socio que deseja consultar a mensalidade: ");
                 fgets(nome_procurado, 100, stdin);
                 consultarMensalidade(nome_procurado); // Consulta todas as informações de uma mensalidade
                 break;
+                }
             case 8:
                 listarSocios();
+                if(num_socio>0){
                 printf("Digite o nome do socio que deseja Quitar a mensalidade: ");
                 fgets(nome_procurado, 100, stdin);
                 quitarMensalidade(nome_procurado); // Quita completamente a mensalidade
                 break;
+                }
             case 9:
                 printf("======= VOCE SAIU DO SISTEMA =======\n");
                 return 0;
