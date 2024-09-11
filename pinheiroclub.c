@@ -110,6 +110,7 @@ int main() {
                 consultarCandidato(nome_procurado); // Consulta um candidato em específico
                 break;
                 }
+                break;
             case 3:
                 listarCandidatos(); // Lista os candidatos
                 if(num_candidato>0){
@@ -117,6 +118,7 @@ int main() {
                 num_socio++; // Incrementa o número de sócios
                 break;
                 }
+                break;
             case 4:
                 listarSocios();
                 if(num_socio>0){
@@ -125,12 +127,14 @@ int main() {
                 consultarSocio(nome_procurado);
                 break;
                 }
+                break;
             case 5:
                 listarSocios();
                 if(num_socio>0){
                 registrarMensalidade(); // Registra uma nova mensalidade
                 break;
                 }
+                break;
             case 6:
                 listarMensalidades(); // Lista as mensalidades
                 break;
@@ -142,6 +146,7 @@ int main() {
                 consultarMensalidade(nome_procurado); // Consulta todas as informações de uma mensalidade
                 break;
                 }
+                break;
             case 8:
                 listarSocios();
                 if(num_socio>0){
@@ -150,6 +155,7 @@ int main() {
                 quitarMensalidade(nome_procurado); // Quita completamente a mensalidade
                 break;
                 }
+                break;
             case 9:
                 printf("======= VOCE SAIU DO SISTEMA =======\n");
                 return 0;
